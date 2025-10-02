@@ -28,7 +28,7 @@ public class Usuario {
     private String telefono;
 
     @Column(name = "contrasena", nullable = false, length = 200)
-    private String contrasena; // almacenaremos hash BCrypt
+    private String contrasena;
 
     @Column(name = "fecha_registro")
     private LocalDateTime fechaRegistro;

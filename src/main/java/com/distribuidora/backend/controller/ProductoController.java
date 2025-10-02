@@ -15,7 +15,7 @@ import java.util.List;
 public class ProductoController {
 
     private final ProductoService productoService;
-
+    
     @GetMapping("/{id}")
     public ResponseEntity<ProductoDTO> getProductoById(@PathVariable Integer id) {
         return ResponseEntity.ok(productoService.getProductoById(id));
@@ -24,6 +24,12 @@ public class ProductoController {
     @GetMapping("/subcategoria/{id}")
     public ResponseEntity<List<ProductoDTO>> getProductosPorSubcategoria(@PathVariable("id") Integer subcategoriaId) {
         List<ProductoDTO> productos = productoService.getProductosBySubcategoria(subcategoriaId);
+        return ResponseEntity.ok(productos);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductoDTO>> buscarProductos(@RequestParam("busqueda") String busqueda) {
+        List<ProductoDTO> productos = productoService.buscarProductosPorNombre(busqueda);
         return ResponseEntity.ok(productos);
     }
 }

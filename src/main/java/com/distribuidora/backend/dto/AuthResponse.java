@@ -13,6 +13,6 @@ public class AuthResponse {
     private String nombre;
     private String telefono;
     private String message;
-    // opcional: token JWT en el futuro
+
     private String token;
 }

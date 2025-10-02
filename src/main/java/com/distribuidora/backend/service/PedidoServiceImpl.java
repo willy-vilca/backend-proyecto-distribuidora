@@ -33,7 +33,6 @@ public class PedidoServiceImpl implements PedidoService {
 
         List<Producto> productos = productoRepository.findAllById(ids); // read-only
 
-        // map id->producto
         Map<Integer, Producto> map = productos.stream().collect(Collectors.toMap(Producto::getId, p -> p));
 
         List<InsufficientItemDTO> insuf = new ArrayList<>();
@@ -60,7 +59,6 @@ public class PedidoServiceImpl implements PedidoService {
             throw new IllegalArgumentException("No hay items en el pedido");
         }
 
-        // lock products for update (prevent race)
         List<Integer> ids = items.stream().map(ItemRequest::getProductId).distinct().collect(Collectors.toList());
         List<Producto> productos = productoRepository.findAllByIdInForUpdate(ids);
         Map<Integer, Producto> map = productos.stream().collect(Collectors.toMap(Producto::getId, p -> p));
@@ -86,7 +84,6 @@ public class PedidoServiceImpl implements PedidoService {
             total = total.add(subtotal);
         }
 
-        // Crear entidad Pedido
         Pedido pedido = new Pedido();
         pedido.setIdCliente(null);
         pedido.setIdUsuario(req.getUsuarioId());
@@ -112,7 +109,6 @@ public class PedidoServiceImpl implements PedidoService {
 
             detalles.add(dp);
 
-            // actualizar stock
             int nuevoStock = (p.getStock() == null ? 0 : p.getStock()) - it.getCantidad();
             p.setStock(nuevoStock);
         }

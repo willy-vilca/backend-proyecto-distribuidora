@@ -11,11 +11,13 @@ import java.util.List;
 
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
-    // Usamos JOIN FETCH para traer la subcategoria y evitar LazyInitializationException
     @Query("SELECT p FROM Producto p JOIN FETCH p.subcategoria s WHERE s.id = :subcategoriaId")
     List<Producto> findBySubcategoriaIdFetchJoin(@Param("subcategoriaId") Integer subcategoriaId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT p FROM Producto p WHERE p.id IN :ids")
     List<Producto> findAllByIdInForUpdate(@Param("ids") List<Integer> ids);
+
+    @Query("SELECT p FROM Producto p WHERE LOWER(p.nombre) LIKE LOWER(CONCAT('%', :busqueda, '%'))")
+    List<Producto> findByNombreContainingIgnoreCase(@Param("busqueda") String busqueda);
 }

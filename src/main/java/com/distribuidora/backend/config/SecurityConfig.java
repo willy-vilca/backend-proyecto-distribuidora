@@ -30,7 +30,6 @@ public class SecurityConfig {
                 .cors()
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        //permitir acceso público a recursos estáticos
                         .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
@@ -39,10 +38,9 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/api/pedidos/**").permitAll()
 
-                        //cualquier otra petición requiere autenticación
                         .anyRequest().authenticated()
                 )
-                .httpBasic(); // mantiene basic auth para rutas protegidas
+                .httpBasic();
 
         return http.build();
     }

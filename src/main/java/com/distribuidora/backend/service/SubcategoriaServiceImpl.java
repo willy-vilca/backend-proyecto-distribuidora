@@ -31,7 +31,6 @@ public class SubcategoriaServiceImpl implements SubcategoriaService {
 
         Subcategoria s = opt.get();
 
-        // Accedemos a s.getCategoriaPadre() dentro de la transacción
         Integer idCat = null;
         String nombreCat = null;
         if (s.getCategoriaPadre() != null) {

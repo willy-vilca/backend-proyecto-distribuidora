@@ -51,5 +51,23 @@ public class ProductoServiceImpl implements ProductoService {
                 .subcategoriaNombre(p.getSubcategoria() != null ? p.getSubcategoria().getNombre() : null)
                 .build();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductoDTO> buscarProductosPorNombre(String busqueda) {
+        List<Producto> productos = productoRepository.findByNombreContainingIgnoreCase(busqueda);
+
+        return productos.stream().map(this::toDtoSimple).collect(Collectors.toList());
+    }
+
+    private ProductoDTO toDtoSimple(Producto p) {
+        return ProductoDTO.builder()
+                .id(p.getId())
+                .cod(p.getCod())
+                .nombre(p.getNombre())
+                .descripcion(p.getDescripcion())
+                .precio(p.getPrecio())
+                .build();
+    }
 }
 

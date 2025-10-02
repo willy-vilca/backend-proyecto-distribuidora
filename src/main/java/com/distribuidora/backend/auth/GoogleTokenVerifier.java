@@ -8,10 +8,6 @@ import java.util.Map;
 
 public class GoogleTokenVerifier {
 
-    /**
-     * Llama al endpoint tokeninfo de Google y devuelve un map con "email" y "name" si el token es válido.
-     * Retorna null si es inválido.
-     */
     public static Map<String, String> verify(String idToken) {
         try {
             String url = UriComponentsBuilder.fromHttpUrl("https://oauth2.googleapis.com/tokeninfo")

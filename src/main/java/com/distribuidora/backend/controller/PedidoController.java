@@ -17,7 +17,7 @@ public class PedidoController {
 
     private final PedidoService pedidoService;
 
-    // Check stock
+    // Checkear stock
     @PostMapping("/check-stock")
     public ResponseEntity<StockCheckResponse> checkStock(@RequestBody List<ItemRequest> items) {
         StockCheckResponse resp = pedidoService.checkStock(items);
