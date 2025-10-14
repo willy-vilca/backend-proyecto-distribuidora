@@ -1,5 +1,6 @@
 package com.distribuidora.backend.controller;
 
+import com.distribuidora.backend.dto.CategoriaConSubDTO;
 import com.distribuidora.backend.model.Categoria;
 import com.distribuidora.backend.model.Subcategoria;
 import com.distribuidora.backend.service.CategoriaService;
@@ -39,5 +40,11 @@ public class CategoriaController {
     public ResponseEntity<List<Subcategoria>> listarSubcategoriasPorCategoria(@PathVariable Integer id) {
         List<Subcategoria> subs = subcategoriaService.getSubcategoriasByCategoriaId(id);
         return ResponseEntity.ok(subs);
+    }
+
+    @GetMapping("/con-subcategorias")
+    public ResponseEntity<List<CategoriaConSubDTO>> getCategoriasConSub() {
+        List<CategoriaConSubDTO> lista = categoriaService.getCategoriasConSubcategorias();
+        return ResponseEntity.ok(lista);
     }
 }
