@@ -12,6 +12,7 @@ public class AuthResponse {
     private String correo;
     private String nombre;
     private String telefono;
+    private String dni;
     private String message;
 
     private String token;

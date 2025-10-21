@@ -20,4 +20,7 @@ public class RegisterRequest {
 
     @NotBlank
     private String telefono;
+
+    @NotBlank
+    private String dni;
 }

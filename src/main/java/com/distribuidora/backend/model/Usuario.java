@@ -32,4 +32,7 @@ public class Usuario {
 
     @Column(name = "fecha_registro")
     private LocalDateTime fechaRegistro;
+
+    @Column(name = "dni", length = 8)
+    private String dni;
 }

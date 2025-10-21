@@ -21,7 +21,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     public AuthResponse register(RegisterRequest req) {
         if (usuarioRepository.existsByCorreo(req.getCorreo())) {
-            return new AuthResponse(null, null, null,null, "El correo ya se encuentra registrado en otra cuenta, intente con otro o inicie sesión.", null);
+            return new AuthResponse(null, null, null,null,null, "El correo ya se encuentra registrado en otra cuenta, intente con otro o inicie sesión.", null);
         }
 
         Usuario u = Usuario.builder()
@@ -30,10 +30,11 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .telefono(req.getTelefono())
                 .contrasena(passwordEncoder.encode(req.getContrasena()))
                 .fechaRegistro(LocalDateTime.now())
+                .dni(req.getDni())
                 .build();
 
         usuarioRepository.save(u);
-        return new AuthResponse(u.getId(), u.getCorreo(), u.getNombre(), u.getTelefono(), "Usuario registrado correctamente", null);
+        return new AuthResponse(u.getId(), u.getCorreo(), u.getNombre(), u.getTelefono(),u.getDni(), "Usuario registrado correctamente", null);
     }
 
     @Override
@@ -41,18 +42,18 @@ public class UsuarioServiceImpl implements UsuarioService {
         return usuarioRepository.findByCorreo(req.getCorreo().toLowerCase())
                 .map(u -> {
                     if (passwordEncoder.matches(req.getContrasena(), u.getContrasena())) {
-                        return new AuthResponse(u.getId(), u.getCorreo(), u.getNombre(), u.getTelefono(), "Login correcto", null);
+                        return new AuthResponse(u.getId(), u.getCorreo(), u.getNombre(), u.getTelefono(),u.getDni(), "Login correcto", null);
                     } else {
-                        return new AuthResponse(null, null, null,null, "Credenciales inválidas, la contraseña es incorrecta, intente nuevamente por favor.", null);
+                        return new AuthResponse(null, null, null,null,null, "Credenciales inválidas, la contraseña es incorrecta, intente nuevamente por favor.", null);
                     }
-                }).orElseGet(() -> new AuthResponse(null, null, null, null, "Usuario no encontrado, el correo que ingreso no está asociada a ninguna cuenta registrada", null));
+                }).orElseGet(() -> new AuthResponse(null, null, null, null,null, "Usuario no encontrado, el correo que ingreso no está asociada a ninguna cuenta registrada", null));
     }
 
     @Override
     public AuthResponse loginOrRegisterGoogle(String correo, String nombre) {
         // Busca por correo; si no existe crea uno (clave aleatoria)
         return usuarioRepository.findByCorreo(correo.toLowerCase())
-                .map(u -> new AuthResponse(u.getId(), u.getCorreo(), u.getNombre(),null, "Login correcto (Google)", null))
+                .map(u -> new AuthResponse(u.getId(), u.getCorreo(), u.getNombre(),null,u.getDni(), "Login correcto (Google)", null))
                 .orElseGet(() -> {
                     Usuario nuevo = Usuario.builder()
                             .correo(correo.toLowerCase())
@@ -63,7 +64,7 @@ public class UsuarioServiceImpl implements UsuarioService {
                             .fechaRegistro(LocalDateTime.now())
                             .build();
                     usuarioRepository.save(nuevo);
-                    return new AuthResponse(nuevo.getId(), nuevo.getCorreo(), nuevo.getNombre(), nuevo.getTelefono(), "Usuario creado por Google", null);
+                    return new AuthResponse(nuevo.getId(), nuevo.getCorreo(), nuevo.getNombre(), nuevo.getTelefono(),null, "Usuario creado por Google", null);
                 });
     }
 }
