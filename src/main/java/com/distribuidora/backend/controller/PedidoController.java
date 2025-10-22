@@ -17,6 +17,13 @@ public class PedidoController {
 
     private final PedidoService pedidoService;
 
+    //obtener pedidos de un usuario
+    @GetMapping("/usuario/{idUsuario}")
+    public ResponseEntity<List<PedidoUsuarioDTO>> getPedidosByUsuario(@PathVariable Integer idUsuario) {
+        List<PedidoUsuarioDTO> pedidos = pedidoService.getPedidosByUsuarioId(idUsuario);
+        return ResponseEntity.ok(pedidos);
+    }
+
     // Checkear stock
     @PostMapping("/check-stock")
     public ResponseEntity<StockCheckResponse> checkStock(@RequestBody List<ItemRequest> items) {

@@ -118,4 +118,19 @@ public class PedidoServiceImpl implements PedidoService {
 
         return new CreateOrderResponse(saved.getId(), "Pedido creado con éxito");
     }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PedidoUsuarioDTO> getPedidosByUsuarioId(Integer idUsuario) {
+        List<Pedido> pedidos = pedidoRepository.findByIdUsuarioOrderByFechaPedidoDesc(idUsuario);
+
+        return pedidos.stream()
+                .map(p -> new PedidoUsuarioDTO(
+                        p.getId(),
+                        p.getFechaPedido(),
+                        p.getTotal()
+                ))
+                .collect(Collectors.toList());
+    }
 }
