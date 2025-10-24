@@ -4,6 +4,7 @@ import com.distribuidora.backend.auth.GoogleTokenVerifier;
 import com.distribuidora.backend.dto.AuthResponse;
 import com.distribuidora.backend.dto.LoginRequest;
 import com.distribuidora.backend.dto.RegisterRequest;
+import com.distribuidora.backend.dto.CambioPasswordDTO;
 import com.distribuidora.backend.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,11 @@ public class AuthController {
             return ResponseEntity.status(401).body(Map.of("message", resp.getMessage()));
         }
         return ResponseEntity.ok(resp);
+    }
+
+    @PostMapping("/cambiar-password")
+    public ResponseEntity<?> cambiarPassword(@RequestBody CambioPasswordDTO dto) {
+        return usuarioService.cambiarPassword(dto);
     }
 
     /**

@@ -3,13 +3,16 @@ package com.distribuidora.backend.service;
 import com.distribuidora.backend.dto.AuthResponse;
 import com.distribuidora.backend.dto.LoginRequest;
 import com.distribuidora.backend.dto.RegisterRequest;
+import com.distribuidora.backend.dto.CambioPasswordDTO;
 import com.distribuidora.backend.model.Usuario;
 import com.distribuidora.backend.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +20,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     @Override
     public AuthResponse register(RegisterRequest req) {
@@ -66,5 +70,27 @@ public class UsuarioServiceImpl implements UsuarioService {
                     usuarioRepository.save(nuevo);
                     return new AuthResponse(nuevo.getId(), nuevo.getCorreo(), nuevo.getNombre(), nuevo.getTelefono(),null, "Usuario creado por Google", null);
                 });
+    }
+
+    @Override
+    public ResponseEntity<?> cambiarPassword(CambioPasswordDTO dto) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByCorreo(dto.getEmail());
+
+        if (optionalUsuario.isEmpty()) {
+            return ResponseEntity.badRequest().body("{\"mensaje\": \"El correo ingresado es incorrecto.\"}");
+        }
+
+        Usuario usuario = optionalUsuario.get();
+
+        // Verificar contraseña antigua
+        if (!passwordEncoder.matches(dto.getOldPassword(), usuario.getContrasena())) {
+            return ResponseEntity.badRequest().body("{\"mensaje\": \"La contraseña actual es incorrecta\"}");
+        }
+
+        // Actualizar contraseña nueva
+        usuario.setContrasena(passwordEncoder.encode(dto.getNewPassword()));
+        usuarioRepository.save(usuario);
+
+        return ResponseEntity.ok("{\"mensaje\": \"Contraseña actualizada correctamente\"}");
     }
 }
