@@ -4,6 +4,7 @@ import com.distribuidora.backend.dto.AuthResponse;
 import com.distribuidora.backend.dto.LoginRequest;
 import com.distribuidora.backend.dto.RegisterRequest;
 import com.distribuidora.backend.dto.CambioPasswordDTO;
+import com.distribuidora.backend.dto.ActualizarUsuarioDTO;
 import com.distribuidora.backend.model.Usuario;
 import com.distribuidora.backend.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -92,5 +93,34 @@ public class UsuarioServiceImpl implements UsuarioService {
         usuarioRepository.save(usuario);
 
         return ResponseEntity.ok("{\"mensaje\": \"Contraseña actualizada correctamente\"}");
+    }
+
+    @Override
+    public ResponseEntity<?> actualizarDatosUsuario(ActualizarUsuarioDTO dto) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findById(dto.getIdUsuario());
+
+        if (usuarioOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("{\"mensaje\": \"Usuario no encontrado\"}");
+        }
+
+        Usuario usuario = usuarioOptional.get();
+
+        // Verificar si el correo nuevo es diferente del actual
+        if (!usuario.getCorreo().equalsIgnoreCase(dto.getCorreo())) {
+            // Verificar si el nuevo correo ya está en uso
+            Optional<Usuario> correoExistente = usuarioRepository.findByCorreoAndNotId(dto.getCorreo(), dto.getIdUsuario());
+            if (correoExistente.isPresent()) {
+                return ResponseEntity.badRequest().body("{\"mensaje\": \"El nuevo correo ya está siendo utilizado por otro usuario\"}");
+            }
+            usuario.setCorreo(dto.getCorreo());
+        }
+
+        usuario.setNombre(dto.getNombre());
+        usuario.setTelefono(dto.getTelefono());
+        usuario.setDni(dto.getDni());
+
+        usuarioRepository.save(usuario);
+
+        return ResponseEntity.ok("{\"mensaje\": \"Los datos de su cuenta han sido actualizados correctamente\"}");
     }
 }
