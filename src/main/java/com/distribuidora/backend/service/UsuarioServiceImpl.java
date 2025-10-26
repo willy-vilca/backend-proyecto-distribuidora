@@ -55,25 +55,6 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public AuthResponse loginOrRegisterGoogle(String correo, String nombre) {
-        // Busca por correo; si no existe crea uno (clave aleatoria)
-        return usuarioRepository.findByCorreo(correo.toLowerCase())
-                .map(u -> new AuthResponse(u.getId(), u.getCorreo(), u.getNombre(),null,u.getDni(), "Login correcto (Google)", null))
-                .orElseGet(() -> {
-                    Usuario nuevo = Usuario.builder()
-                            .correo(correo.toLowerCase())
-                            .nombre(nombre != null ? nombre : correo)
-                            .telefono("0000000000")
-                            // guardamos una contraseña aleatoria (no usada)
-                            .contrasena(passwordEncoder.encode(java.util.UUID.randomUUID().toString()))
-                            .fechaRegistro(LocalDateTime.now())
-                            .build();
-                    usuarioRepository.save(nuevo);
-                    return new AuthResponse(nuevo.getId(), nuevo.getCorreo(), nuevo.getNombre(), nuevo.getTelefono(),null, "Usuario creado por Google", null);
-                });
-    }
-
-    @Override
     public ResponseEntity<?> cambiarPassword(CambioPasswordDTO dto) {
         Optional<Usuario> optionalUsuario = usuarioRepository.findByCorreo(dto.getEmail());
 

@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 public interface UsuarioService {
     AuthResponse register(RegisterRequest req);
     AuthResponse login(LoginRequest req);
-    AuthResponse loginOrRegisterGoogle(String correo, String nombre);
     ResponseEntity<?> cambiarPassword(CambioPasswordDTO cambioPasswordDTO);
     ResponseEntity<?> actualizarDatosUsuario(ActualizarUsuarioDTO dto);
 }
