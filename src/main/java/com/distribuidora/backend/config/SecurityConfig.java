@@ -38,6 +38,8 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/api/pedidos/**").permitAll()
 
+                        .requestMatchers(HttpMethod.PUT, "/api/auth/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .httpBasic();
