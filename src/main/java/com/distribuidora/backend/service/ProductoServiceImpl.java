@@ -27,6 +27,7 @@ public class ProductoServiceImpl implements ProductoService {
                 .nombre(p.getNombre())
                 .descripcion(p.getDescripcion())
                 .precio(p.getPrecio())
+                .stock(p.getStock())
                 .subcategoriaId(p.getSubcategoria().getId())
                 .build();
     }
@@ -67,6 +68,7 @@ public class ProductoServiceImpl implements ProductoService {
                 .nombre(p.getNombre())
                 .descripcion(p.getDescripcion())
                 .precio(p.getPrecio())
+                .stock(p.getStock())
                 .build();
     }
 }
